@@ -12,5 +12,7 @@ namespace Cw6.Services
         Task<bool> Exists(string indexNumber);
         
         Task Create(EnrollStudent model, SqlTransaction sqlTransaction, int idEnrollment);
+        
+        Task<Student> GetByIndex(string index);
     }
 }

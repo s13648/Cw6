@@ -28,6 +28,19 @@ namespace Cw6.Services
 	                                                ST.[IndexNumber] = @IndexNumber";
 
 
+        private const string GetByIndexQuery = @"SELECT 
+	                                        S.FirstName,
+	                                        S.LastName,
+	                                        S.BirthDate,
+	                                        ST.Name AS StudyName,
+	                                        E.Semester
+                                        FROM 
+	                                        [Student] AS S JOIN 
+	                                        [Enrollment] AS E ON S.IdEnrollment = E.IdEnrollment JOIN
+	                                        [Studies] AS ST ON E.IdStudy = ST.IdStudy
+                                        WHERE
+                                            S.[IndexNumber] = @IndexNumber";
+
         private const string InsertStudentQuery = @"INSERT INTO [dbo].[Student]
                            ([IndexNumber]
                            ,[FirstName]
@@ -101,6 +114,30 @@ namespace Cw6.Services
             command.Parameters.AddWithValue("@IdEnrollment", idEnrollment);
 
             await command.ExecuteNonQueryAsync();
+        }
+
+        public async Task<Student> GetByIndex(string index)
+        {
+            await using var sqlConnection = new SqlConnection(config.ConnectionString);
+            await using var command = new SqlCommand(GetByIndexQuery, sqlConnection) { CommandType = CommandType.Text };
+            command.Parameters.AddWithValue("IndexNumber", index);
+
+            await sqlConnection.OpenAsync();
+
+            await using var sqlDataReader = await command.ExecuteReaderAsync();
+            while (await sqlDataReader.ReadAsync())
+            {
+                return new Student
+                {
+                    BirthDate = DateTime.Parse(sqlDataReader[nameof(Student.BirthDate)]?.ToString()),
+                    FirstName = sqlDataReader[nameof(Student.FirstName)].ToString(),
+                    LastName = sqlDataReader[nameof(Student.LastName)].ToString(),
+                    Semester = int.Parse(sqlDataReader[nameof(Student.Semester)].ToString()),
+                    StudyName = sqlDataReader[nameof(Student.StudyName)].ToString()
+                };
+            }
+
+            return null;
         }
     }
 }

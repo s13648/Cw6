@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Cw6.Middleware.Dto
+namespace Cw6.Middlewares.Dto
 {
     public class ErrorDetails
     {

@@ -1,4 +1,4 @@
-using Cw6.Middleware;
+using Cw6.Middlewares;
 using Cw6.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -40,6 +40,8 @@ namespace Cw6
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseMiddleware<LoggingMiddleware>();
 
             app.UseMiddleware<ExceptionMiddleware>();
 

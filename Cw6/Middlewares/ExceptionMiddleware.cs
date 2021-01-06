@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using Cw6.Middleware.Dto;
+using Cw6.Middlewares.Dto;
 using Microsoft.AspNetCore.Http;
 
-namespace Cw6.Middleware
+namespace Cw6.Middlewares
 {
     public class ExceptionMiddleware
     {
